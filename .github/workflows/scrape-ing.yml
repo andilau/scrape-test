@@ -30,7 +30,7 @@ jobs:
       run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' > stand.csv
 
     - name: Get Bearbeitungszeiten
-      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten table td' > values.csv
+      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten table td' | tr '\n' ',' > values.csv
 
     - name: Commit and push if the data has changed
       run: |-
