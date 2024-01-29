@@ -12,10 +12,6 @@ jobs:
     steps:
     - name: Check out this repo
       uses: actions/checkout@v4
-      
-    - name: Print shell
-      run: |-
-        echo $SHELL
               
     - name: Fetch latest data
       run: |-
@@ -24,17 +20,11 @@ jobs:
     - name: Setup htmlq
       uses: remarkablemark/setup-htmlq@v2
     
-    - name: Print version
-      run: htmlq --version
-
-    - name: Print help
-      run: htmlq --help
-
     - name: Get Stand
       run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}' > stand.csv
 
     - name: Get Bearbeitungszeiten
-      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten table td' > values.csv
+      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten table td' | awk 1 ORS=',' > values.csv
 
     - name: Commit and push if the data has changed
       run: |-
