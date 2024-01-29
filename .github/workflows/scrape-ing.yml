@@ -1,4 +1,4 @@
-name: Scrape ING parter news
+name: Scrape ING partner news
 on:
   push:
   workflow_dispatch:
