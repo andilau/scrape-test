@@ -3,6 +3,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron:  '0,20,40 * * * *' # every twenty minutes
+permissions:
+  contents: write
 jobs:
   scheduled:
     runs-on: ubuntu-latest
