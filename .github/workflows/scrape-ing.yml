@@ -12,9 +12,26 @@ jobs:
     steps:
     - name: Check out this repo
       uses: actions/checkout@v4
+      
     - name: Fetch latest data
       run: |-
         curl -s "https://www.ing.de/partner/news/" > news.html
+        
+    - name: Setup htmlq
+      uses: remarkablemark/setup-htmlq@v2
+    
+    - name: Print version
+      run: htmlq --version
+
+    - name: Print help
+      run: htmlq --help
+
+    - name: Get Stand
+      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' > stand.csv
+
+    - name: Get Bearbeitungszeiten
+      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten table td' > values.csv
+
     - name: Commit and push if the data has changed
       run: |-
         git config user.name "Automated"
