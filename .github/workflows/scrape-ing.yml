@@ -28,7 +28,6 @@ jobs:
         ING_VALUES=$(echo "$RESPONSE" | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')
         echo "ing_date=$ING_DATE" >> $GITHUB_OUTPUT
         echo "ing_values=$ING_VALUES" >> $GITHUB_OUTPUT
-
         
   pull-request:
     name: Create Pull Request
@@ -55,4 +54,31 @@ jobs:
       run: |-
         git add -A
         git commit -m "ING: Update Bearbeitungszeiten vom ${{ needs.scrape.outputs.bearbeitungszeiten_date }}" || exit 0
-        git push
+
+    - name: Create Pull Request
+      id: create-pr
+      uses: peter-evans/create-pull-request@v4
+      with:
+        labels: base
+        add-paths: |
+          ing_bearbeitungszeiten.csv
+        commit-message: |-
+          [MTV] ING: Update Bearbeitungszeiten vom ${{ needs.scrape.outputs.bearbeitungszeiten_date }}"
+          Updates ING Bearbeitungszeiten. See details in [workflow run].
+          [workflow run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        branch: github-actions/update-ing-bearbeitungszeiten
+        title: "chore(deps): bump open-telemetry agent to ${{ needs.upgrade.outputs.latest_version }}"
+        body: |-
+          Updates ING Bearbeitungszeiten. See details in [workflow run].
+  
+          <details>
+          <summary>Summary Release Notes</summary>
+  
+          - Notes
+          </details>
+  
+          [workflow run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        author: github-actions <github-actions@github.com>
+        committer: github-actions <github-actions@github.com>
+        signoff: true
+
