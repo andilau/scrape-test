@@ -17,10 +17,14 @@ jobs:
       uses: remarkablemark/setup-htmlq@v2
     
     - name: Get Stand
-      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}' > stand.csv
+      run: echo "ING_STAND=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}'") >> $GITHUB_ENV
 
     - name: Get Bearbeitungszeiten
-      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';' > values.csv
+      run: echo "ING_VALUES=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';'") >> $GUTHUB_ENV
+
+    - name: Store CSV
+      run: echo "${{ env.ING_STAND }};${{ env.ING_VALUES }}" > ing_bearbeitungszeiten.csv
+
 
     - name: Commit and push if the data has changed
       run: |-
