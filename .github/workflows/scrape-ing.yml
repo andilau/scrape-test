@@ -43,7 +43,7 @@ jobs:
         ref: main
 
     - name: Store CSV
-      run: echo "${{ needs.scrape.outputs.bearbeitungszeiten_date }};${{ needs.scrape.outputs.bearbeitungszeiten_values }}" > ing_bearbeitungszeiten.csv
+      run: echo "${{ needs.scrape.outputs.bearbeitungszeiten_date }};${{ needs.scrape.outputs.bearbeitungszeiten_values }};" > ing_bearbeitungszeiten.csv
 
     - name: Set git identity
       run: |-
@@ -57,7 +57,7 @@ jobs:
 
     - name: Create Pull Request
       id: create-pr
-      uses: peter-evans/create-pull-request@v4
+      uses: peter-evans/create-pull-request@v5
       with:
         labels: base
         add-paths: |
