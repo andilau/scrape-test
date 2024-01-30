@@ -1,9 +1,9 @@
-name: Scrape ING partner news
+name: Scrape ING Bearbeitungszeiten
 on:
   push:
   workflow_dispatch:
   schedule:
-    - cron:  '0,20,40 * * * *' # every twenty minutes
+    - cron:  '1 * * * *' # every twenty minutes
 permissions:
   contents: write
 jobs:
