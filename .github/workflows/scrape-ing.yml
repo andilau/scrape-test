@@ -31,13 +31,30 @@ jobs:
         echo "ing_date=$ING_DATE" >> $GITHUB_OUTPUT
         echo "ing_values=$ING_VALUES" >> $GITHUB_OUTPUT
 
+        
+  pull-request:
+    name: Create Pull Request (mtp)
+    needs: scrape
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: main
+
     - name: Store CSV
-      run: echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > ing_bearbeitungszeiten.csv
+      run: echo "${{ needs.scrape.outputs.bearbeitungszeiten_date }};${{ needs.scrape.outputs.bearbeitungszeiten_values }}" > ing_bearbeitungszeiten.csv
+
+    - name: Set git identity
+      run: |-
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
 
     - name: Commit and push if the data has changed
       run: |-
-        git config user.name "Automated"
-        git config user.email "actions@users.noreply.github.com"
         git add -A
         timestamp=$(date -u)
         git commit -m "Latest data: ${timestamp}" || exit 0
