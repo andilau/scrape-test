@@ -20,12 +20,16 @@ jobs:
               
     - name: Setup htmlq
       uses: remarkablemark/setup-htmlq@v2
+
+    - name: Curl
+      id: curl
+      run: echo "response=$(curl -s https://www.ing.de/partner/news/)" >> $GITHUB_OUTPUT
     
     - name: Parse Bearbeitungszeiten
       id: parse
       run: |-
-        echo "ing_date=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}')" >> $GITHUB_OUTPUT
-        echo "ing_values=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')" >> $GITHUB_OUTPUT
+        echo "ing_date=$(echo ${{ steps.curl.outputs.response }} | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}')" >> $GITHUB_OUTPUT
+        echo "ing_values=$(echo ${{ steps.curl.outputs.response }} | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')" >> $GITHUB_OUTPUT
 
     - name: Store CSV
       run: echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > ing_bearbeitungszeiten.csv
