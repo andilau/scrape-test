@@ -11,8 +11,8 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     outputs:
-      bearbeitungszeiten_date: ${{ steps.parse.outputs.date }}
-      bearbeitungszeiten_values: ${{ steps.parse.outputs.values }}
+      bearbeitungszeiten_date: ${{ steps.parse.outputs.ing_date }}
+      bearbeitungszeiten_values: ${{ steps.parse.outputs.ing_values }}
 
     steps:
     - name: Check out this repo
@@ -24,11 +24,11 @@ jobs:
     - name: Parse Bearbeitungszeiten
       id: parse
       run: |-
-        echo "ING_DATE=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}')" >> $GITHUB_OUTPUT
-        echo "ING_VALUES=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')" >> $GITHUB_OUTPUT
+        echo "ing_date=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}')" >> $GITHUB_OUTPUT
+        echo "ing_values=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')" >> $GITHUB_OUTPUT
 
     - name: Store CSV
-      run: echo "${{ steps.parse.outputs.ING_DATE }};${{ steps.parse.outputs.ING_VALUES }}" > ing_bearbeitungszeiten.csv
+      run: echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > ing_bearbeitungszeiten.csv
 
     - name: Commit and push if the data has changed
       run: |-
