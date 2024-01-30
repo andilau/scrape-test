@@ -24,10 +24,12 @@ jobs:
 
     - name: Curl
       id: curl
-      run: |-
-        response=$(curl -s 'https://www.ing.de/partner/news/')
-        echo "response=\"$response\"" >> $GITHUB_OUTPUT
-    
+      run: |
+        {
+          echo 'response<<EOF'
+          curl --silent https://www.ing.de/partner/news/
+          echo EOF
+        } >> "$GITHUB_ENV"
     - name: Parse Bearbeitungszeiten
       id: parse
       run: |-
