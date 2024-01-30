@@ -50,11 +50,6 @@ jobs:
         git config user.name "github-actions"
         git config user.email "github-actions@github.com"
 
-    - name: Commit and push if the data has changed
-      run: |-
-        git add -A
-        git commit -m "ING: Update Bearbeitungszeiten vom ${{ needs.scrape.outputs.bearbeitungszeiten_date }}" || exit 0
-
     - name: Create Pull Request
       id: create-pr
       uses: peter-evans/create-pull-request@v6-rc
