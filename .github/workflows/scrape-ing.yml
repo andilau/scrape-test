@@ -1,14 +1,19 @@
 name: Scrape ING Bearbeitungszeiten
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron:  '1 * * * *' # every twenty minutes
+
 permissions:
   contents: write
+
 jobs:
-  scrape_ing:
+  scrape:
     runs-on: ubuntu-latest
+    outputs:
+      bearbeitungszeiten_date: ${{ steps.parse.outputs.date }}
+      bearbeitungszeiten_values: ${{ steps.parse.outputs.values }}
+
     steps:
     - name: Check out this repo
       uses: actions/checkout@v4
@@ -16,14 +21,14 @@ jobs:
     - name: Setup htmlq
       uses: remarkablemark/setup-htmlq@v2
     
-    - name: Get Bearbeitungszeiten Date
-      run: echo "ING_DATE=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}')" >> $GITHUB_ENV
-
-    - name: Get Bearbeitungszeiten Values
-      run: echo "ING_VALUES=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')" >> $GITHUB_ENV
+    - name: Parse Bearbeitungszeiten
+      id: parse
+      run: |-
+        echo "ING_DATE=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}')" >> $GITHUB_OUTPUT
+        echo "ING_VALUES=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')" >> $GITHUB_OUTPUT
 
     - name: Store CSV
-      run: echo "${{ env.ING_DATE }};${{ env.ING_VALUES }}" > ing_bearbeitungszeiten.csv
+      run: echo "${{ steps.parse.outputs.ING_DATE }};${{ steps.parse.outputs.ING_VALUES }}" > ing_bearbeitungszeiten.csv
 
     - name: Commit and push if the data has changed
       run: |-
