@@ -54,6 +54,5 @@ jobs:
     - name: Commit and push if the data has changed
       run: |-
         git add -A
-        timestamp=$(date -u)
-        git commit -m "Latest data: ${timestamp}" || exit 0
+        git commit -m "ING: Update Bearbeitungszeiten vom ${{ needs.scrape.outputs.bearbeitungszeiten_date }}" || exit 0
         git push
