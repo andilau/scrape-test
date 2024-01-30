@@ -27,9 +27,10 @@ jobs:
       run: |
         {
           echo 'response<<EOF'
-          curl --silent https://www.ing.de/partner/news/
+          curl --silent 'https://www.ing.de/partner/news/'
           echo EOF
-        } >> "$GITHUB_OUTPUT"
+        } >> $GITHUB_OUTPUT
+        
     - name: Parse Bearbeitungszeiten
       id: parse
       run: |-
