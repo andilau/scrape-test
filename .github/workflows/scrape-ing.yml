@@ -13,10 +13,6 @@ jobs:
     - name: Check out this repo
       uses: actions/checkout@v4
               
-    - name: Fetch latest data
-      run: |-
-        curl -s "https://www.ing.de/partner/news/" > news.html
-        
     - name: Setup htmlq
       uses: remarkablemark/setup-htmlq@v2
     
@@ -24,7 +20,7 @@ jobs:
       run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}' > stand.csv
 
     - name: Get Bearbeitungszeiten
-      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten table td' | awk 1 ORS=',' > values.csv
+      run: curl --silent "https://www.ing.de/partner/news/" | htmlq --text '#Bearbeitungszeiten table td:nth-child(2)' | awk 1 ORS=';' > values.csv
 
     - name: Commit and push if the data has changed
       run: |-
