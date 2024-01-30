@@ -20,7 +20,7 @@ jobs:
       run: echo "ING_STAND=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}'") >> $GITHUB_ENV
 
     - name: Get Bearbeitungszeiten
-      run: echo "ING_VALUES=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';'") >> $GUTHUB_ENV
+      run: echo "ING_VALUES=$(curl --silent 'https://www.ing.de/partner/news/' | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';'") >> $GITHUB_ENV
 
     - name: Store CSV
       run: echo "${{ env.ING_STAND }};${{ env.ING_VALUES }}" > ing_bearbeitungszeiten.csv
