@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   scrape:
+    name: Scrape Bearbeitungszeiten
     runs-on: ubuntu-latest
     outputs:
       bearbeitungszeiten_date: ${{ steps.parse.outputs.ing_date }}
@@ -30,7 +31,7 @@ jobs:
 
         
   pull-request:
-    name: Create Pull Request (mtp)
+    name: Create Pull Request
     needs: scrape
     runs-on: ubuntu-latest
     permissions:
