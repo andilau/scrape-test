@@ -23,7 +23,9 @@ jobs:
 
     - name: Curl
       id: curl
-      run: echo "response=$(curl -s 'https://www.ing.de/partner/news/')" >> $GITHUB_OUTPUT
+      run: |-
+        response="response=$(curl -s 'https://www.ing.de/partner/news/')" 
+        echo "response=\"$response\"" >> $GITHUB_OUTPUT
     
     - name: Parse Bearbeitungszeiten
       id: parse
