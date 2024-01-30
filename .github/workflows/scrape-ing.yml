@@ -27,7 +27,7 @@ jobs:
       run: |-
         RESPONSE=$(curl --silent https://www.ing.de/partner/news/)
         ING_DATE=$(echo "$RESPONSE" | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}') 
-        ING_VALUES=$(echo "RESPONSE" | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')
+        ING_VALUES=$(echo "$RESPONSE" | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')
         echo "ing_date=$ING_DATE" >> $GITHUB_OUTPUT
         echo "ing_values=$ING_VALUES" >> $GITHUB_OUTPUT
 
