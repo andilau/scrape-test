@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+defaults:
+  run:
+    working-directory: a/b/c
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
