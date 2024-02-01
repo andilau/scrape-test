@@ -15,6 +15,8 @@ defaults:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    env:
+      CSV_FILE: ing_bearbeitungszeiten.csv
     outputs:
       bearbeitungszeiten_date: ${{ steps.parse.outputs.ing_date }}
       bearbeitungszeiten_values: ${{ steps.parse.outputs.ing_values }}
@@ -36,7 +38,7 @@ jobs:
           echo "ing_values=$ING_VALUES" >> $GITHUB_OUTPUT
 
       - name: Store CSV
-        run: echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > ing_bearbeitungszeiten.csv
+        run: echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > $CSV_FILE
 
       - name: Commit and push if the data has changed
         run: |-
