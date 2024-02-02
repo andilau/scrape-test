@@ -28,7 +28,7 @@ jobs:
       - name: Setup htmlq
         uses: remarkablemark/setup-htmlq@v2
 
-      - name: Curl and Parse Bearbeitungszeiten
+      - name: Curl and parse Bearbeitungszeiten
         id: parse
         run: |-
           RESPONSE=$(curl --silent https://www.ing.de/partner/news/)
@@ -43,14 +43,14 @@ jobs:
       #     1     No lines were selected.
       #     >1    An error occurred.
 
-      - name: Store CSV
+      - name: Store when values not found
         id: store
         run: |-
           if grep -q "${{ steps.parse.outputs.ing_values }}" "$CSV_FILE"; then
           echo "Found!"
           else
           echo "Not Found!"
-          echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > $CSV_FILE
+          echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > "$CSV_FILE"
           fi
 
       - name: Commit and push if the data has changed
