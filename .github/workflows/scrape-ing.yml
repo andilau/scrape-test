@@ -37,13 +37,26 @@ jobs:
           echo "ing_date=$ING_DATE" >> $GITHUB_OUTPUT
           echo "ing_values=$ING_VALUES" >> $GITHUB_OUTPUT
 
-      - name: Store CSV
-        run: echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > $CSV_FILE
-
+      #     The grep utility exits with one of the following values:
+      #
+      #     0     One or more lines were selected.
+      #     1     No lines were selected.
+      #     >1    An error occurred.
       - name: Compare Values
+        id: compare
         run: |-
           grep "${{ steps.parse.outputs.ing_values }}" $CSV_FILE
           echo $?
+
+      - name: Store CSV
+        id: store
+        run: |-
+          if grep -q "${{ steps.parse.outputs.ing_values }}" "$CSV_FILE"; then
+          echo "Found!"
+          else
+          echo "Not Found!"
+          echo "${{ steps.parse.outputs.ing_date }};${{ steps.parse.outputs.ing_values }}" > $CSV_FILE
+          fi
 
       - name: Commit and push if the data has changed
         run: |-
