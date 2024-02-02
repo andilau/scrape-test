@@ -13,10 +13,12 @@ defaults:
     working-directory: a/b/c
 
 jobs:
-  scrape:
+  update_ing_bearbeitungszeiten:
     runs-on: ubuntu-latest
     env:
+      SITE_URL: https://www.ing.de/partner/news/
       CSV_FILE: ing_bearbeitungszeiten.csv
+
     outputs:
       bearbeitungszeiten_date: ${{ steps.parse.outputs.ing_date }}
       bearbeitungszeiten_values: ${{ steps.parse.outputs.ing_values }}
@@ -31,7 +33,7 @@ jobs:
       - name: Curl and parse Bearbeitungszeiten
         id: parse
         run: |-
-          RESPONSE=$(curl --silent https://www.ing.de/partner/news/)
+          RESPONSE=$(curl --silent "$SITE_URL")
           ING_DATE=$(echo "$RESPONSE" | htmlq --text '#Bearbeitungszeiten .rich-content__subheadline' | awk -F' +' '{print $2}') 
           ING_VALUES=$(echo "$RESPONSE" | htmlq --text '#Bearbeitungszeiten table td:nth-child(3)' | awk 1 ORS=';')
           echo "ing_date=$ING_DATE" >> $GITHUB_OUTPUT
