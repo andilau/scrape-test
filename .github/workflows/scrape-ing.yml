@@ -42,11 +42,6 @@ jobs:
       #     0     One or more lines were selected.
       #     1     No lines were selected.
       #     >1    An error occurred.
-      - name: Compare Values
-        id: compare
-        run: |-
-          grep "${{ steps.parse.outputs.ing_values }}" $CSV_FILE
-          echo $?
 
       - name: Store CSV
         id: store
